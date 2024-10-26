@@ -43,33 +43,29 @@ app.post('/signup',(req,res)=>{
     
 })
 
-app.post('/login',(req,res)=>{
-    console.log(req)
-    console.log(req.body.userType)
+app.post('/login', (req, res) => {
+    console.log(req.body);
+
     let sql;
-    if(req.body.userType==="student")
-        {
-        const sql= "SELECT * FROM students WHERE `srn` = ? and `password` = ?";
-        }
-    else if(req.body.userType==="staff"){
-        const sql= "SELECT * FROM staff  WHERE `srn` = ? and `password` = ?";
+    if (req.body.userType === "student") {
+        sql = "SELECT * FROM students WHERE `srn` = ? AND `password` = ?";
+    } else if (req.body.userType === "staff") {
+        sql = "SELECT * FROM staff WHERE `SID` = ? AND `password` = ?";
+    } else {
+        return res.json({ Message: "Please select student/staff" });
     }
-    else{
-        alert("Please select student/staff")
-    }
-    db.query(sql,[req.body.srn,req.body.password],(err,result)=>{
-        console.log(result);
-        if(err) return res.json({Message:"Internal Server Error"})
-        // console.log(sql)
-        if(result.length>0){
-            return res.json({Login:true})
-        }
-        else{
-            return res.json({Login:false})
-        }
+
+    db.query(sql, [req.body.srn, req.body.password], (err, result) => {
+        if (err) return res.json({ Message: "Internal Server Error" });
         
-    })
-})
+        if (result.length > 0) {
+            return res.json({ Login: true });
+        } else {
+            return res.json({ Login: false });
+        }
+    });
+});
+
 
 app.get('/exams', (req, res) => {
     const sql = "SELECT * FROM courses"; // Query to fetch all exams
@@ -81,7 +77,7 @@ app.get('/exams', (req, res) => {
     });
   });
   
-  app.get('/questions', (req, res) => {
+app.get('/questions', (req, res) => {
     const subjectcode = req.query.subjID; // Match the query parameter name
     const sql = "SELECT QuestionID, Question, Option1, Option2, Option3, Option4, Answer FROM mcqs WHERE SubjID = ?"; // Adjust your column names as needed
     db.query(sql, [subjectcode], (err, result) => {

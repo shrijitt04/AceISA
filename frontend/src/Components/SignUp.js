@@ -30,7 +30,7 @@ function Signup() {
     try {
       await axios.post('http://localhost:8081/signup', values);
       alert("Signed up successfully!!");
-      navigate('/student');
+      navigate('/login');
     } catch (err) {
       console.log(err);
     }

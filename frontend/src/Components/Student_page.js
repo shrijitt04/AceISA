@@ -1,7 +1,8 @@
 // Component.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 export default function Component() {
   const [exams, setExams] = useState([]);
@@ -9,6 +10,10 @@ export default function Component() {
   const [showExams, setShowExams] = useState(false);
   const welcomeText = 'Welcome to ACE ISA';
   const navigate = useNavigate(); // Hook for navigating to other pages
+  const location = useLocation();
+
+  const srn = location.state.srn;
+  console.log(srn)
 
   useEffect(() => {
     const fetchExams = async () => {
@@ -48,8 +53,8 @@ export default function Component() {
   }, []);
 
   const startExam = (examCode) => {
-    alert("Starting Exam :",examCode);
-    navigate(`/exam/${examCode}`); // Navigate to the Exam component with subjectcode
+    alert("Starting Exam :", examCode);
+    navigate(`/exam/${examCode}`, {state : {srn: srn ,subjid : examCode}}); 
   };
 
   return (

@@ -7,6 +7,7 @@ import Login from './Components/Login';
 import Signup from './Components/SignUp';
 import Student from './Components/Student_page';
 import Exam from './Components/Exam_page';
+// import Staff from './Components/Staff';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 
@@ -19,7 +20,9 @@ function App() {
         <Route path='/login' element={<Login />}></Route>
         <Route path='/signup' element={<Signup />}></Route>
         <Route path='/student' element={<Student />}></Route>
+        {/* <Route path='/staff' element={<Staff />}> </Route> */}
         <Route path="/exam/:subjectcode" element={<Exam />} />
+
 
       </Routes>
      

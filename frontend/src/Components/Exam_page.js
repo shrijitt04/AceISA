@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Function to fetch questions from the server based on the subjID
 const fetchQuestions = async (subjectcode) => {
+
   try {
+    
     const response = await fetch(`http://localhost:8081/questions?subjID=${subjectcode}`, {
       method: 'GET',
       headers: {
@@ -24,7 +26,15 @@ const fetchQuestions = async (subjectcode) => {
   }
 };
 
+
 const Exam = () => {
+  const location = useLocation()
+
+  const srn = location.state.srn
+  const examCode = location.state.subjid
+
+  console.log(srn)
+  console.log(examCode)
   const { subjectcode } = useParams();  // Extract the subjectcode from the route parameters
   const [testData, setTestData] = useState(null);
   const [answers, setAnswers] = useState({});

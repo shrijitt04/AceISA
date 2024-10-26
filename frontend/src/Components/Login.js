@@ -24,7 +24,15 @@ function Login() {
       .then(res => {
         console.log(res);
         if (res.data.Login) {
-          navigate('/student');
+          if(values.userType==="student"){
+            navigate('/student', { state: { srn: values.srn } });
+          }
+          else if(values.userType==="staff"){
+            navigate('/student', { state: { srn: values.srn } });
+          }
+          else{
+            alert("Please select student/staff")
+          }
         } else {
           alert("Bad Credentials");
         }
