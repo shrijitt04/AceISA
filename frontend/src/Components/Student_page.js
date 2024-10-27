@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import axios from 'axios';
 
 export default function Component() {
   const [exams, setExams] = useState([]);
@@ -13,7 +13,7 @@ export default function Component() {
   const location = useLocation();
 
   const srn = location.state.srn;
-  console.log(srn)
+  console.log(srn);
 
   useEffect(() => {
     const fetchExams = async () => {
@@ -53,8 +53,24 @@ export default function Component() {
   }, []);
 
   const startExam = (examCode) => {
-    alert("Starting Exam :", examCode);
-    navigate(`/exam/${examCode}`, {state : {srn: srn ,subjid : examCode}}); 
+    const values = {
+      srn: srn,
+      examCode: examCode,
+    };
+
+    axios.post('http://localhost:8081/check_marks', values)
+      .then(res => {
+        if (res.data.Given) {
+          alert("Exam already submitted");
+        } 
+        else {
+          alert("Starting Exam: " + examCode);
+          navigate(`/exam/${examCode}`, { state: { srn: srn, subjid: examCode } });
+        }
+      })
+      .catch(err => {
+        console.error('Error checking exam status:', err);
+      });
   };
 
   return (

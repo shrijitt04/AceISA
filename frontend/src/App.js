@@ -7,6 +7,7 @@ import Login from './Components/Login';
 import Signup from './Components/SignUp';
 import Student from './Components/Student_page';
 import Exam from './Components/Exam_page';
+import ThankYouPage from './Components/Thankyou';
 // import Staff from './Components/Staff';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
@@ -22,6 +23,7 @@ function App() {
         <Route path='/student' element={<Student />}></Route>
         {/* <Route path='/staff' element={<Staff />}> </Route> */}
         <Route path="/exam/:subjectcode" element={<Exam />} />
+        <Route path='/thankyou' element={<ThankYouPage />} />
 
 
       </Routes>

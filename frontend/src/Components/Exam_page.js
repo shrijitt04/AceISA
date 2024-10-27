@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import axios from 'axios'
 // Function to fetch questions from the server based on the subjID
 const fetchQuestions = async (subjectcode) => {
 
@@ -29,7 +29,7 @@ const fetchQuestions = async (subjectcode) => {
 
 const Exam = () => {
   const location = useLocation()
-
+  const navigate = useNavigate()
   const srn = location.state.srn
   const examCode = location.state.subjid
 
@@ -77,9 +77,24 @@ const Exam = () => {
           correct_answers++;
         }
       }
-  
+      
       console.log("Correct answers:", correct_answers);
-      alert(`Test submitted successfully! You Score is ${correct_answers}`);
+      
+      const values = {
+        examCode: examCode,
+        srn: srn,
+        correct_answers: correct_answers
+      };
+      
+      try{
+        axios.post('http://localhost:8081/marks',values)
+        alert(`Test submitted successfully!, Your marks will be displayed on the next page.`);
+        navigate('/Thankyou', { state : { srn: values.srn,correct_answers : values.correct_answers, totalQuestions: testData.length}})
+      }
+      catch (err){
+          console.log(err)
+      }
+      
     } else {
       alert(`Please answer all questions. You have answered ${answeredQuestions} out of ${totalQuestions} questions.`);
     }

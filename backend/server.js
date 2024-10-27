@@ -94,6 +94,42 @@ app.get('/questions', (req, res) => {
     });
 });
 
+app.post('/marks', (req, res) => {
+    const sql = "INSERT INTO marks (`SubjID`, `SRN`, `marks`) VALUES (?)";
+    const values = [
+        req.body.examCode,
+        req.body.srn,
+        req.body.correct_answers
+    ];
+
+    db.query(sql, [values], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.json({ Message: "Error" });
+        }
+        res.json({ Message: "Marks inserted successfully!" });
+    });
+});
+
+app.post('/check_marks',(req,res)=>{
+
+    const sql = "SELECT * FROM marks where SubjID = (?) and SRN = (?)"
+    const values = [
+        SubjID = req.body.examCode,
+        SRN = req.body.srn
+    ]
+    db.query(sql,values,(err,result)=>{
+        if(err) throw err
+        else{
+            if(result.length>0){
+                return res.json({Given: true})
+            }
+            else{
+                return res.json({Given : false})
+            }
+        }
+    })
+})
 
 app.listen(8081,()=>{
     console.log("Connected")
