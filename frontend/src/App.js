@@ -8,6 +8,8 @@ import Signup from './Components/SignUp';
 import Student from './Components/Student_page';
 import Exam from './Components/Exam_page';
 import ThankYouPage from './Components/Thankyou';
+import TeacherHomePage from './Components/Teacherhome';
+import TeacherExamPage from './Components/TeacherExamPage';
 // import Staff from './Components/Staff';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
@@ -24,6 +26,8 @@ function App() {
         {/* <Route path='/staff' element={<Staff />}> </Route> */}
         <Route path="/exam/:subjectcode" element={<Exam />} />
         <Route path='/thankyou' element={<ThankYouPage />} />
+        <Route path='/teacherhome' element={<TeacherHomePage />} />
+        <Route path='/teacherexampage/:subjectcode' element={<TeacherExamPage />} />
 
 
       </Routes>
