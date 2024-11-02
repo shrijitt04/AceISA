@@ -11,6 +11,7 @@ import ThankYouPage from './Components/Thankyou';
 import TeacherHomePage from './Components/Teacherhome';
 import TeacherExamPage from './Components/TeacherExamPage';
 // import Staff from './Components/Staff';
+import ExamCreationPage from './Components/ExamCreation';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 
@@ -28,7 +29,7 @@ function App() {
         <Route path='/thankyou' element={<ThankYouPage />} />
         <Route path='/teacherhome' element={<TeacherHomePage />} />
         <Route path='/teacherexampage/:subjectcode' element={<TeacherExamPage />} />
-
+        <Route path='/createnewexam' element={<ExamCreationPage />} />
 
       </Routes>
      

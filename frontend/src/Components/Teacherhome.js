@@ -63,6 +63,7 @@ export default function TeacherHomePage() {
 
   const createExam = () => {
     alert("Creating a new exam");
+    navigate('/createnewexam')
     // Add navigation logic for exam creation here if needed
   };
 
