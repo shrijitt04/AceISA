@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 const ThankYouPage = () => {
@@ -9,14 +10,33 @@ const ThankYouPage = () => {
   const score = location.state.correct_answers;
   const totalQuestions = location.state.totalQuestions;
   const srn = location.state.srn;
+  const examCode = location.state.examCode;
   const [typedText1, setTypedText1] = useState('');
   const [typedText2, setTypedText2] = useState('');
   const [showScore, setShowScore] = useState(false);
   const [showBottom, setShowBottom] = useState(false);
 
-  const onGoBack = () =>{
-      navigate('/student',{state: {srn: srn }})
-  }
+  const onGoBack = async () => {
+    const values = { 
+      srn: srn, 
+      score: score, 
+      totalQuestions: totalQuestions, 
+      examCode: examCode,
+    };
+  
+    try {
+      
+      await axios.post('http://localhost:8081/email', values);
+      
+      alert("You are returing to home page");
+      navigate('/student', { state: { srn: srn } });
+    } catch (err) {
+      console.error("Failed to send email:", err.response ? err.response.data : err.message);
+      alert("Failed to send email. Please try again later.");
+    }
+  };
+  
+  
   useEffect(() => {
     const text1 = 'Thank you for taking up the test';
     const text2 = 'You scored';

@@ -11,7 +11,7 @@ import ThankYouPage from './Components/Thankyou';
 import TeacherHomePage from './Components/Teacherhome';
 import TeacherExamPage from './Components/TeacherExamPage';
 // import Staff from './Components/Staff';
-import ExamCreationPage from './Components/ExamCreation';
+import ExamCreationPage from './Components/Teacherexamcreation';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 

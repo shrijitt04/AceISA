@@ -9,10 +9,12 @@ export default function Component() {
   const [typedText, setTypedText] = useState('');
   const [showExams, setShowExams] = useState(false);
   const welcomeText = 'Welcome to ACE ISA';
+  
   const navigate = useNavigate(); // Hook for navigating to other pages
   const location = useLocation();
 
   const srn = location.state.srn;
+  const welcomeText2 = srn;
   console.log(srn);
 
   useEffect(() => {
@@ -41,7 +43,7 @@ export default function Component() {
     let index = 0;
     const typingInterval = setInterval(() => {
       if (index <= welcomeText.length) {
-        setTypedText(welcomeText.slice(0, index));
+        setTypedText(welcomeText.slice(0, index)+","+welcomeText2);
         index++;
       } else {
         clearInterval(typingInterval);

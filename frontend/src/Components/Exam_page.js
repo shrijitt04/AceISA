@@ -89,7 +89,7 @@ const Exam = () => {
       try{
         axios.post('http://localhost:8081/marks',values)
         alert(`Test submitted successfully!, Your marks will be displayed on the next page.`);
-        navigate('/Thankyou', { state : { srn: values.srn,correct_answers : values.correct_answers, totalQuestions: testData.length}})
+        navigate('/Thankyou', { state : { srn: values.srn,correct_answers : values.correct_answers, totalQuestions: testData.length, examCode: values.examCode}})
       }
       catch (err){
           console.log(err)

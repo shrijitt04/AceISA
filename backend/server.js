@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const mysql2 = require('mysql2')
+const nodemailer = require('nodemailer')
 
 const app = express()
 app.use(cors())
@@ -128,9 +129,78 @@ app.post('/check_marks',(req,res)=>{
                 return res.json({Given : false})
             }
         }
-    })
-})
+    });
+});
 
-app.listen(8081,()=>{
-    console.log("Connected")
-})
+app.post('/email', (req, res) => {
+  const { srn, score, totalQuestions, examCode } = req.body;
+  db.query(
+    `SELECT name, email FROM students WHERE srn = ?`,
+    [srn],
+    (emailError, emailResults) => {
+      if (emailError) {
+        console.error('Error fetching email:', emailError);
+        return res.status(500).send({ message: 'Failed to fetch email', error: emailError });
+      }
+
+      if (!emailResults || emailResults.length === 0) {
+        return res.status(404).send({ message: 'No email found for this SRN' });
+      }
+      const name = emailResults[0].name
+      const studentEmail = emailResults[0].email; 
+      db.query(
+        `SELECT q.Question, d.detailed_answer 
+         FROM mcqs q
+         JOIN detailed_answers d 
+         ON q.QuestionID = d.QuestionID AND q.SubjID = d.SubjID
+         WHERE q.SubjID = ?`,
+        [examCode],
+        (error, results) => {
+          if (error) {
+            console.error('Error fetching questions and answers:', error);
+            return res.status(500).send({ message: 'Failed to fetch questions and answers', error });
+          }
+
+          console.log(results);
+          if (!results || results.length === 0) {
+            return res.status(404).send({ message: 'No questions or answers found for this exam' });
+          }
+
+          let emailContent = `Dear ${name},\n\nYou scored ${score} out of ${totalQuestions} in your ${examCode} test.\n\nHere are the exam questions and detailed answers:\n\n Absolutely disgrace!!! you gay man \n\n`;
+          results.forEach((row, index) => {
+            emailContent += `Q${index + 1}: ${row.Question}\nAnswer: ${row.detailed_answer}\n\n`;
+          });
+          emailContent += `Thank you for participating!\n\nBest Regards,\nAceISA Team`;
+
+          const transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            auth: {
+              user: 'aceisa.pesu@gmail.com', 
+              pass: 'nykm iuog xdcs dlmv' 
+            },
+          });
+
+          const mailOptions = {
+            from: 'aceisa.pesu@gmail.com', 
+            to: studentEmail, 
+            subject: 'Test Results and Answers',
+            text: emailContent,
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error('Error sending email:', error);
+              return res.status(500).send({ message: 'Failed to send email', error });
+            } else {
+              console.log('Email sent successfully:', info.response);
+              return res.status(200).send({ message: 'Email sent successfully' });
+            }
+          });
+        }
+      );
+    }
+  );
+});
+app.listen(8081, () => {
+  console.log("Server is running on port 8081");
+});
