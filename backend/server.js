@@ -2,11 +2,13 @@ const express = require('express')
 const cors = require('cors')
 const mysql2 = require('mysql2')
 const nodemailer = require('nodemailer')
+const bodyParser = require('body-parser')
+
 
 const app = express()
 app.use(cors())
 app.use(express.json())
-
+app.use(bodyParser.json())
 const db = mysql2.createConnection({
     host:"localhost",
     user:"root",
@@ -201,6 +203,70 @@ app.post('/email', (req, res) => {
     }
   );
 });
+
+app.post('/create-test', (req, res) => {
+  console.log(req.body)
+  const values = [
+    req.body.SubjID,
+    req.body.Course_name,
+    req.body.Created_by,
+    req.body.Created_on,
+  ];
+
+
+  const sql = "INSERT INTO courses (`SubjID`, `Course_name`, `Created_by`, `Created_on`) VALUES (?, ?, ?, ?)";
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ Message: "Error creating test" });
+    }
+    return res.status(201).json({ Message: "Test created successfully!", Result: result });
+  });
+});
+
+app.post('/add-question', (req, res) => {
+  console.log(req.body);
+  const values = [
+    req.body.QuestionID,
+    req.body.subjID,
+    req.body.Question,
+    req.body.Option1,
+    req.body.Option2,
+    req.body.Option3,
+    req.body.Option4,
+    req.body.Answer
+  ];
+
+  const sql = `INSERT INTO mcqs (QuestionID, SubjID, Question, Option1, Option2, Option3, Option4, Answer) VALUES (?)`;
+
+  db.query(sql, [values], (err, result) => {
+    if (err) {
+      console.error(err); 
+      return res.status(500).json({ error: 'Database error occurred' }); 
+    }
+
+    const values_detailed = [
+      req.body.subjID,
+      req.body.QuestionID,
+      req.body.DetailedAnswer
+    ];
+    
+    const sql2 = `INSERT INTO detailed_answers (SubjID, QuestionID, detailed_answer) VALUES (?)`; // Assuming you have a table named detailed_answers
+    db.query(sql2, [values_detailed], (err2, result2) => {
+      if (err2) {
+        console.error(err2);
+        return res.status(500).json({ error: 'Database error occurred' }); // Send error response
+      }
+
+      // Send a success response
+      return res.status(200).json({ message: 'Question added successfully', result });
+    });
+  });
+});
+
+
+
 app.listen(8081, () => {
   console.log("Server is running on port 8081");
 });
