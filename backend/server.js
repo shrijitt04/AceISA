@@ -291,6 +291,35 @@ app.delete('/delete/:examCode', (req, res) => {
   });
 });
 
+app.post('/change_email',(req,res)=>{
+  console.log("Inside API ")
+  const {srn, currentEmail , newEmail} = req.body
+  let sql = `UPDATE students SET Email = (?) where SRN=(?)`
+
+  db.query(sql,[newEmail,srn],(result,err)=>{
+    if (err) {
+      console.error('Error updating email:', err);
+      res.status(500).send('Error updating email');
+    } else {
+      res.status(200).json({ success: true, message: 'Email updated successfully' });
+    }
+  })
+})
+
+app.post('/change_password',(req,res)=>{
+  console.log("Inside API ")
+  const {srn, currentPassword , newPassword} = req.body
+  let sql = `UPDATE students SET Password = (?) where SRN=(?)`
+
+  db.query(sql,[newPassword,srn],(result,err)=>{
+    if (err) {
+      console.error('Error updating email:', err);
+      res.status(500).send('Error updating email');
+    } else {
+      res.status(200).json({ success: true, message: 'Email updated successfully' });
+    }
+  })
+})
 
 app.listen(8081, () => {
   console.log("Server is running on port 8081");

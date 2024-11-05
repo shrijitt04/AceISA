@@ -1,38 +1,49 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
-const StudentDetailsPage = ({ studentName = "John Doe", studentSRN = "SRN12345" }) => {
+const StudentDetailsPage = () => {
+  const location = useLocation();
+  const studentSRN = location.state.srn;
   const [currentEmail, setCurrentEmail] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [showDialog, setShowDialog] = useState(false);
-  const [dialogMessage, setDialogMessage] = useState('');
 
-  const handleEmailChange = (e) => {
+  const handleEmailChange = async (e) => {
     e.preventDefault();
-    if (currentEmail !== 'current@example.com') {
-      setDialogMessage('Wrong current email entered');
-      setShowDialog(true);
-    } else {
-      console.log('Email updated to:', newEmail);
-      setDialogMessage('Email updated successfully');
-      setShowDialog(true);
+    const values = { srn: studentSRN, currentEmail, newEmail };
+    try {
+      const response = await axios.post("http://localhost:8081/change_email", values);
+      if (response.status === 200){
+        alert('Failed to update email. Please try again.');
+      }
+    } catch (error) {
+      alert('Email updated successfully');
+      
+      console.error('Error updating email:', error);
     }
   };
 
-  const handlePasswordChange = (e) => {
-    e.preventDefault();
-    if (currentPassword !== 'currentpassword') {
-      setDialogMessage('Wrong current password entered');
-      setShowDialog(true);
-    } else {
-      console.log('Password updated');
-      setDialogMessage('Password updated successfully');
-      setShowDialog(true);
+  const handlePasswordChange = async (e) => {
+    e.preventDefault(); 
+    const values = { srn: studentSRN, currentPassword, newPassword };
+    
+    try {
+      const response = await axios.post("http://localhost:8081/change_password", values);
+      
+      if (response.status === 200) {
+        alert('Failed to update password. Please try again.'); 
+      } else {
+        alert('Failed to update password. Please try again.'); 
+      }
+    } catch (error) {
+      alert('Password updated successfully'); 
+      console.error('Error updating password:', error);
     }
   };
-
+  
   return (
     <div style={{
       background: 'linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%)',
@@ -42,9 +53,6 @@ const StudentDetailsPage = ({ studentName = "John Doe", studentSRN = "SRN12345" 
       fontFamily: 'Arial, sans-serif'
     }}>
       <div className="mb-4">
-        <h1 className="mb-2" style={{ fontSize: '3rem' }}>
-          {studentName}
-        </h1>
         <h2 style={{ fontSize: '1.5rem' }}>
           {studentSRN}
         </h2>
@@ -103,23 +111,6 @@ const StudentDetailsPage = ({ studentName = "John Doe", studentSRN = "SRN12345" 
           <button type="submit" className="btn btn-primary">Update Password</button>
         </form>
       </div>
-
-      {showDialog && (
-        <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="bg-white p-4 rounded">
-            <p>{dialogMessage}</p>
-            <button className="btn btn-primary" onClick={() => setShowDialog(false)}>Close</button>
-          </div>
-        </div>
-      )}
-
-      <style>
-        {`
-          .form-control::placeholder {
-            color: rgba(255,255,255,0.5);
-          }
-        `}
-      </style>
     </div>
   );
 };

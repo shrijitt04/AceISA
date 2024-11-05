@@ -1,4 +1,3 @@
-// Component.js
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,7 +8,7 @@ export default function Component() {
   const [typedText, setTypedText] = useState('');
   const [showExams, setShowExams] = useState(false);
   const welcomeText = 'Welcome to ACE ISA';
-  
+
   const navigate = useNavigate(); // Hook for navigating to other pages
   const location = useLocation();
 
@@ -43,7 +42,7 @@ export default function Component() {
     let index = 0;
     const typingInterval = setInterval(() => {
       if (index <= welcomeText.length) {
-        setTypedText(welcomeText.slice(0, index)+","+welcomeText2);
+        setTypedText(welcomeText.slice(0, index) + "," + welcomeText2);
         index++;
       } else {
         clearInterval(typingInterval);
@@ -64,8 +63,7 @@ export default function Component() {
       .then(res => {
         if (res.data.Given) {
           alert("Exam already submitted");
-        } 
-        else {
+        } else {
           alert("Starting Exam: " + examCode);
           navigate(`/exam/${examCode}`, { state: { srn: srn, subjid: examCode } });
         }
@@ -75,10 +73,17 @@ export default function Component() {
       });
   };
 
+  const goToProfile = () => {
+    navigate('/studentprofile', { state: { srn: srn } });
+  };
+
   return (
     <div className="exam-page">
       <div className="container pt-5">
         <h1 className="welcome-text mb-4">{typedText}</h1>
+        <button className="btn btn-secondary mb-3" onClick={goToProfile}>
+          Profile
+        </button>
         {showExams && (
           <div className="scroll-container">
             <div className="scroll-content">
