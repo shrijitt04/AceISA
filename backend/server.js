@@ -265,6 +265,31 @@ app.post('/add-question', (req, res) => {
   });
 });
 
+// DELETE endpoint to delete an exam
+// DELETE endpoint to delete an exam
+app.delete('/delete/:examCode', (req, res) => {
+  const examCode = req.params.examCode;
+
+  console.log(`Attempting to delete exam with code: ${examCode}`); // Log the exam code to delete
+
+  const query = 'DELETE FROM courses WHERE SubjID = ?'; // Assuming SubjID is the unique identifier for exams
+
+  db.query(query, [examCode], (err, result) => {
+    if (err) {
+      console.error('Error deleting exam:', err);
+      return res.status(500).json({ message: 'Failed to delete exam.' });
+    }
+
+    console.log(result); // Log the result to check affected rows
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Exam not found.' });
+    }
+
+    // Log successful deletion
+    console.log(`Successfully deleted exam with code: ${examCode}`);
+    return res.status(200).json({ message: 'Exam deleted successfully.' });
+  });
+});
 
 
 app.listen(8081, () => {

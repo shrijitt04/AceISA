@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const ExamCreationPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const srn = location.state.srn;
   const [showTitle, setShowTitle] = useState(false);
   const [subjID, setSubjID] = useState('');
   const [courseName, setCourseName] = useState('');
@@ -17,10 +21,17 @@ const ExamCreationPage = () => {
   const [options, setOptions] = useState(['', '', '', '']);
   const [correctAnswer, setCorrectAnswer] = useState('');
   const [detailedAnswer, setDetailedAnswer] = useState('');
+  const [isTestCreated, setIsTestCreated] = useState(false);
 
   useEffect(() => {
+    // Show the title after a short delay
     setTimeout(() => setShowTitle(true), 500);
-  }, []);
+
+    // Set the createdBy to the srn and createdOn to the current date
+    setCreatedBy(srn);
+    const currentDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    setCreatedOn(currentDate);
+  }, [srn]);
 
   const handleInputChange = (setter) => (e) => setter(e.target.value);
 
@@ -41,7 +52,6 @@ const ExamCreationPage = () => {
   };
 
   const handleNextQuestion = async () => {
-    // Check that all necessary fields are filled out
     if (questionID && questionText && options.every(option => option) && correctAnswer && detailedAnswer) {
       const newQuestion = {
         QuestionID: questionID,
@@ -55,26 +65,22 @@ const ExamCreationPage = () => {
         DetailedAnswer: detailedAnswer,
       };
 
-      // Make API call to add the current question
       try {
         const response = await axios.post("http://localhost:8081/add-question", newQuestion);
         
-        // Check if the response is successful
         if (response.status === 200) {
-          // Append the new question to the questions array
           setQuestions(prevQuestions => [...prevQuestions, newQuestion]);
 
-          // Increment currentQuestion only if it is less than the questionCount
           if (currentQuestion < questionCount) {
             setCurrentQuestion(currentQuestion + 1);
-            // Reset the fields for the next question
             setQuestionID('');
             setQuestionText('');
             setOptions(['', '', '', '']);
             setCorrectAnswer('');
             setDetailedAnswer('');
           } else {
-            alert("You have entered all the questions. Click on 'Publish Test' to finish.");
+            alert("Test Published successfully! You are returning to the home page");
+            navigate('/teacherhome', { state: { srn: srn } });
           }
         } else {
           alert('Failed to add the question. Please try again.');
@@ -97,8 +103,9 @@ const ExamCreationPage = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:8081/create-test", values);
+      await axios.post("http://localhost:8081/create-test", values);
       alert("Test created successfully, please enter the questions");
+      setIsTestCreated(true);
     } catch (err) {
       console.error(err);
       alert("An error occurred while creating the test.");
@@ -137,9 +144,8 @@ const ExamCreationPage = () => {
           <input
             type="text"
             className="form-control"
-            placeholder="Enter Created By"
             value={createdBy}
-            onChange={handleInputChange(setCreatedBy)}
+            disabled
           />
         </div>
         <div className="col-md-3">
@@ -148,7 +154,7 @@ const ExamCreationPage = () => {
             type="date"
             className="form-control"
             value={createdOn}
-            onChange={handleInputChange(setCreatedOn)}
+            disabled
           />
         </div>
       </div>
@@ -163,33 +169,35 @@ const ExamCreationPage = () => {
         </div>
       </div>
 
-      <div className="row mb-4">
-        <div className="col-md-6">
-          <h4 className="text-white">Number of Questions</h4>
-          <input
-            type="number"
-            className="form-control"
-            placeholder="1-40"
-            min="1"
-            max="40"
-            value={questionCount}
-            onChange={handleQuestionCountChange}
-          />
+      {isTestCreated && (
+        <div className="row mb-4">
+          <div className="col-md-6">
+            <h4 className="text-white">Number of Questions</h4>
+            <input
+              type="number"
+              className="form-control"
+              placeholder="1-40"
+              min="1"
+              max="40"
+              value={questionCount}
+              onChange={handleQuestionCountChange}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {showQuestionForm && (
-        <div className={`question-form ${showQuestionForm ? 'fade-in' : ''}`} style={{ opacity: 0.9 }}>
+        <div className="question-form" style={{ opacity: 0.9 }}>
           <h3 className="mb-3 text-white">Question {currentQuestion}</h3>
           <input
             type="text"
-            className="form-control mb-3 bg-dark text-white"
+            className="form-control mb-3 bg-light" // Changed bg-white to bg-light
             placeholder="Enter Question ID"
             value={questionID}
             onChange={(e) => setQuestionID(e.target.value)}
           />
           <textarea
-            className="form-control mb-3 bg-dark text-white"
+            className="form-control mb-3 bg-light" // Changed bg-white to bg-light
             placeholder="Enter your question here"
             value={questionText}
             onChange={(e) => setQuestionText(e.target.value)}
@@ -199,7 +207,7 @@ const ExamCreationPage = () => {
               <div key={index} className="col-md-6 mb-2">
                 <input
                   type="text"
-                  className="form-control bg-dark text-white"
+                  className="form-control bg-light" // Changed bg-white to bg-light
                   placeholder={`Option ${index + 1}`}
                   value={option}
                   onChange={(e) => handleOptionChange(index, e.target.value)}
@@ -210,31 +218,21 @@ const ExamCreationPage = () => {
           <h5 className="text-white mt-4">Correct Answer (A, B, C, or D)</h5>
           <input
             type="text"
-            className="form-control mb-3 bg-dark text-white"
+            className="form-control mb-3 bg-light" // Changed bg-white to bg-light
             placeholder="Enter correct answer (A, B, C, or D)"
             value={correctAnswer}
             onChange={(e) => setCorrectAnswer(e.target.value.toUpperCase())}
           />
           <h5 className="text-white mt-4">Enter Detailed Answer</h5>
           <textarea
-            className="form-control mb-3 bg-dark text-white"
+            className="form-control mb-3 bg-light" // Changed bg-white to bg-light
             placeholder="Enter detailed answer"
             value={detailedAnswer}
             onChange={(e) => setDetailedAnswer(e.target.value)}
           />
-          {currentQuestion < questionCount ? (
-            <button
-              className="btn btn-primary"
-              onClick={handleNextQuestion}
-            >
-              Next Question
-            </button>
-          ) : (
-            <button
-              className="btn btn-warning"
-              onClick={handleNextQuestion} // Optionally you can change this to a different function if needed
-            >
-              Publish Test
+          {currentQuestion <= questionCount && (
+            <button className="btn btn-primary mt-3" onClick={handleNextQuestion}>
+              {currentQuestion < questionCount ? 'Next Question' : 'Finish & Publish'}
             </button>
           )}
         </div>
@@ -243,4 +241,4 @@ const ExamCreationPage = () => {
   );
 };
 
-export default ExamCreationPage;
+export default ExamCreationPage

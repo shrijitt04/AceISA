@@ -58,12 +58,25 @@ export default function TeacherHomePage() {
     };
     alert("Viewing Exam: " + examCode);
     navigate(`/teacherexampage/${examCode}`, { state: { srn: srn, subjid: examCode } });
-      
+  };
+
+  const deleteExam = async (examCode) => {
+    const confirmDelete = window.confirm(`Are you sure you want to delete exam: ${examCode}?`);
+    if (confirmDelete) {
+      try {
+        await axios.delete(`http://localhost:8081/delete/${examCode}`);
+        setExams(exams.filter(exam => exam.SubjID !== examCode));
+        alert("Exam deleted successfully.");
+      } catch (error) {
+        console.error('Error deleting exam:', error);
+        alert("Failed to delete exam.");
+      }
+    }
   };
 
   const createExam = () => {
     alert("Creating a new exam");
-    navigate('/createnewexam')
+    navigate('/createnewexam', { state: { srn: srn } });
     // Add navigation logic for exam creation here if needed
   };
 
@@ -84,9 +97,14 @@ export default function TeacherHomePage() {
                     <p className="subject-name">{exam.Course_name}</p>
                     <p className="exam-info">Created By: {exam.Created_by}</p>
                     <p className="exam-info">Created On: {new Date(exam.Created_on).toLocaleDateString()}</p>
-                    <button className="btn btn-primary w-100" onClick={() => viewExam(exam.SubjID)}>
-                      View Exam
-                    </button>
+                    <div className="d-flex">
+                      <button className="btn btn-primary w-50 me-2" onClick={() => viewExam(exam.SubjID)}>
+                        View Exam
+                      </button>
+                      <button className="btn btn-danger w-50" onClick={() => deleteExam(exam.SubjID)}>
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
