@@ -265,8 +265,6 @@ app.post('/add-question', (req, res) => {
   });
 });
 
-// DELETE endpoint to delete an exam
-// DELETE endpoint to delete an exam
 app.delete('/delete/:examCode', (req, res) => {
   const examCode = req.params.examCode;
 
@@ -320,6 +318,73 @@ app.post('/change_password',(req,res)=>{
     }
   })
 })
+
+
+app.post('/forgot-password', (req, res) => {
+  const { srn } = req.body; // Fix destructuring
+
+  db.query(
+    `SELECT name, email, password FROM students WHERE srn = ?`,
+    [srn],
+    (emailError, emailResults) => {
+      if (emailError) {
+        console.error('Error fetching email:', emailError);
+        return res.status(500).send({ message: 'Failed to fetch email', error: emailError });
+      }
+
+      if (!emailResults || emailResults.length === 0) {
+        return res.status(404).send({ message: 'No email found for this SRN' });
+      }
+
+      const name = emailResults[0].name;
+      const studentEmail = emailResults[0].email;
+      const password = emailResults[0].password;
+
+      const emailContent = `
+        Dear ${name},
+
+        Your details are:
+
+        SRN: ${srn}
+        Password: ${password}
+
+        Do not share your password with anyone.
+
+        Thank you!
+
+        Best Regards,
+        AceISA Team
+      `;
+
+      const transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: 'aceisa.pesu@gmail.com', 
+          pass: 'nykm iuog xdcs dlmv' 
+        },
+      });
+
+      const mailOptions = {
+        from: 'aceisa.pesu@gmail.com',
+        to: studentEmail,
+        subject: 'Forgot password',
+        text: emailContent,
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error('Error sending email:', error);
+          return res.status(500).send({ success: false, message: 'Failed to send email', error });
+        } else {
+          console.log('Email sent successfully:', info.response);
+          return res.status(200).send({ success:true, message: 'Email sent successfully' });
+        }
+      });
+    }
+  );
+});
+
+module.exports = app; // Make sure to export your app if needed
 
 app.listen(8081, () => {
   console.log("Server is running on port 8081");

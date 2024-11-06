@@ -8,14 +8,14 @@ function Login() {
   const [values, setValues] = useState({
     srn: '',
     password: '',
-    userType: '' // Initialize userType here
+    userType: ''
   });
 
   const navigate = useNavigate();
 
   const handleInput = (event) => {
     const { name, value } = event.target;
-    setValues(prev => ({ ...prev, [name]: value.trim() })); // Trim spaces
+    setValues(prev => ({ ...prev, [name]: value.trim() }));
   };
 
   const handleSubmit = (event) => {
@@ -24,14 +24,12 @@ function Login() {
       .then(res => {
         console.log(res);
         if (res.data.Login) {
-          if(values.userType==="student"){
+          if (values.userType === "student") {
             navigate('/student', { state: { srn: values.srn } });
-          }
-          else if(values.userType==="staff"){
+          } else if (values.userType === "staff") {
             navigate('/teacherhome', { state: { srn: values.srn } });
-          }
-          else{
-            alert("Please select student/staff")
+          } else {
+            alert("Please select student/staff");
           }
         } else {
           alert("Bad Credentials");
@@ -42,9 +40,28 @@ function Login() {
       });
   };
 
+  const handleForgotPassword = () => {
+    
+    const srn = prompt("Please enter your SRN/SID to reset your password:");
+    if (srn) {
+      axios.post('http://localhost:8081/forgot-password', { srn })
+        .then(res => {
+          if (res.data.success) {
+            alert("Password reset link sent to your registered email.");
+          } else {
+            alert("Failed to send password reset link. Please try again.");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          alert("An error occurred while sending the reset link.");
+        });
+    }
+  };
+
   return (
     <div className="login template d-flex justify-content-center align-items-center vh-100 bg-primary" style={{
-      height: "100vh", // Ensure the height is set for the gradient to be visible
+      height: "100vh",
       background:
         "linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%)",
     }}>
@@ -55,7 +72,7 @@ function Login() {
             <label htmlFor="SRN">SRN/SID</label>
             <input
               type="text"
-              name="srn" // Add name attribute
+              name="srn"
               placeholder="PES2XXXXXXXXX"
               className="form-control"
               onChange={handleInput}
@@ -65,20 +82,19 @@ function Login() {
             <label htmlFor="password">Password</label>
             <input
               type="password"
-              name="password" // Add name attribute
+              name="password"
               placeholder="Enter Password"
               className="form-control"
               onChange={handleInput}
             />
           </div>
 
-          {/* Radio buttons for Student and Staff */}
           <div className="mb-2">
             <div className="form-check form-check-inline">
               <input
                 className="form-check-input"
                 type="radio"
-                name="userType" // This is already correct
+                name="userType"
                 id="student"
                 value="student"
                 onChange={handleInput}
@@ -89,7 +105,7 @@ function Login() {
               <input
                 className="form-check-input"
                 type="radio"
-                name="userType" // This is already correct
+                name="userType"
                 id="staff"
                 value="staff"
                 onChange={handleInput}
@@ -102,6 +118,15 @@ function Login() {
           </div>
           <p className="text-end mt-2">
             New User? <Link to="/signup" className="ms-2">Sign Up Now!</Link>
+          </p>
+          <p className="text-end mt-2">
+            <button
+              type="button"
+              className="btn btn-link p-0 text-decoration-none"
+              onClick={handleForgotPassword}
+            >
+              Forgot Password?
+            </button>
           </p>
         </form>
       </div>
