@@ -168,11 +168,11 @@ app.post('/email', (req, res) => {
             return res.status(404).send({ message: 'No questions or answers found for this exam' });
           }
 
-          let emailContent = `Dear ${name},\n\nYou scored ${score} out of ${totalQuestions} in your ${examCode} test.\n\nHere are the exam questions and detailed answers:\n\n Absolutely disgrace!!! you gay man \n\n`;
+          let emailContent = `Dear ${name},\n\nYou scored ${score} out of ${totalQuestions} in your ${examCode} test.\n\nHere are the exam questions and detailed answers:\n\n`;
           results.forEach((row, index) => {
             emailContent += `Q${index + 1}: ${row.Question}\nAnswer: ${row.detailed_answer}\n\n`;
           });
-          emailContent += `Thank you for participating!\n\nBest Regards,\nAceISA Team`;
+          emailContent += `All the best and thank you for participating!\n\nBest Regards,\nAceISA Team`;
 
           const transporter = nodemailer.createTransport({
             service: 'Gmail',
@@ -259,7 +259,7 @@ app.post('/add-question', (req, res) => {
         return res.status(500).json({ error: 'Database error occurred' }); // Send error response
       }
 
-      // Send a success response
+      
       return res.status(200).json({ message: 'Question added successfully', result });
     });
   });
@@ -268,9 +268,9 @@ app.post('/add-question', (req, res) => {
 app.delete('/delete/:examCode', (req, res) => {
   const examCode = req.params.examCode;
 
-  console.log(`Attempting to delete exam with code: ${examCode}`); // Log the exam code to delete
+  console.log(`Attempting to delete exam with code: ${examCode}`); 
 
-  const query = 'DELETE FROM courses WHERE SubjID = ?'; // Assuming SubjID is the unique identifier for exams
+  const query = 'DELETE FROM courses WHERE SubjID = ?'; 
 
   db.query(query, [examCode], (err, result) => {
     if (err) {
@@ -278,12 +278,12 @@ app.delete('/delete/:examCode', (req, res) => {
       return res.status(500).json({ message: 'Failed to delete exam.' });
     }
 
-    console.log(result); // Log the result to check affected rows
+    console.log(result); 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Exam not found.' });
     }
 
-    // Log successful deletion
+   
     console.log(`Successfully deleted exam with code: ${examCode}`);
     return res.status(200).json({ message: 'Exam deleted successfully.' });
   });
@@ -321,7 +321,7 @@ app.post('/change_password',(req,res)=>{
 
 
 app.post('/forgot-password', (req, res) => {
-  const { srn } = req.body; // Fix destructuring
+  const { srn } = req.body; 
 
   db.query(
     `SELECT name, email, password FROM students WHERE srn = ?`,
@@ -343,7 +343,7 @@ app.post('/forgot-password', (req, res) => {
       const emailContent = `
         Dear ${name},
 
-        Your details are:
+        Your Login credentials are:
 
         SRN: ${srn}
         Password: ${password}
@@ -384,7 +384,7 @@ app.post('/forgot-password', (req, res) => {
   );
 });
 
-module.exports = app; // Make sure to export your app if needed
+
 
 app.listen(8081, () => {
   console.log("Server is running on port 8081");

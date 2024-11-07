@@ -62,7 +62,7 @@ export default function Component() {
     axios.post('http://localhost:8081/check_marks', values)
       .then(res => {
         if (res.data.Given) {
-          alert("Exam already submitted");
+          alert("Your marks for this exam have been noted, each exam can be taken only once!");
         } else {
           alert("Starting Exam: " + examCode);
           navigate(`/exam/${examCode}`, { state: { srn: srn, subjid: examCode } });
