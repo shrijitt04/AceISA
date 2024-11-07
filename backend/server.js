@@ -384,7 +384,43 @@ app.post('/forgot-password', (req, res) => {
   );
 });
 
+// server.js
 
+app.get('/leaderboard', (req, res) => {
+  const { examCode } = req.query;  // Access examCode from req.query
+  console.log("Received examCode:", examCode);
+
+  // Assuming examCode contains the `subjId`
+  const subjId = examCode;
+  const query = `
+    SELECT SRN, marks, 
+           (SELECT GetAverageMarks(?)) AS average_marks
+    FROM marks 
+    WHERE SubjID = ? 
+    ORDER BY marks DESC
+  `;
+
+  db.query(query, [subjId, subjId], (error, results) => {
+    if (error) {
+      console.error("Error fetching leaderboard data:", error);
+      res.status(500).send("Server error");
+      return;
+    }
+
+    const averageMarks = results.length ? results[0].average_marks : 0;
+    res.json({ leaderboard: results, averageMarks });
+  });
+});
+
+app.post('/name',(req,res)=>{
+  const {srn} = req.body
+
+  let sql = `SELECT Name from students where srn = (?)`
+  db.query(sql,[srn],(err,results)=>{
+    if(err) throw error
+    res.json({name:results})
+  })
+})
 
 app.listen(8081, () => {
   console.log("Server is running on port 8081");

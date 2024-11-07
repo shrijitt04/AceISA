@@ -13,6 +13,7 @@ import TeacherExamPage from './Components/TeacherExamPage';
 // import Staff from './Components/Staff';
 import StudentDetailsPage from './Components/Student_proile';
 import ExamCreationPage from './Components/Teacherexamcreation';
+import LeaderboardPage from './Components/Leaderboard';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 
@@ -32,6 +33,7 @@ function App() {
         <Route path='/teacherexampage/:subjectcode' element={<TeacherExamPage />} />
         <Route path='/createnewexam' element={<ExamCreationPage />} />
         <Route path='/studentprofile' element={<StudentDetailsPage />}/>
+        <Route path='/leaderboard' element={<LeaderboardPage />} />
 
       </Routes>
      

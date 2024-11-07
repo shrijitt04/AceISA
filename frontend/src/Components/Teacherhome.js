@@ -77,7 +77,11 @@ export default function TeacherHomePage() {
   const createExam = () => {
     alert("Creating a new exam");
     navigate('/createnewexam', { state: { srn: srn } });
-    // Add navigation logic for exam creation here if needed
+  };
+
+  const viewLeaderboard = () => {
+    alert("Viewing the leaderboard");
+    navigate('/leaderboard', { state: { srn: srn } });
   };
 
   return (
@@ -86,9 +90,14 @@ export default function TeacherHomePage() {
         <h1 className="welcome-text mb-4">{typedText}</h1>
         {showExams && (
           <>
-            <button className="btn btn-primary mb-4" onClick={createExam}>
-              Create Exam
-            </button>
+            <div className="d-flex mb-4">
+              <button className="btn btn-primary me-2" onClick={createExam}>
+                Create Exam
+              </button>
+              <button className="btn btn-secondary" onClick={viewLeaderboard}>
+                Leaderboard
+              </button>
+            </div>
             <div className="scroll-container">
               <div className="scroll-content">
                 {exams.map((exam, index) => (
