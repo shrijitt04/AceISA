@@ -45,63 +45,64 @@ export default function StudentDetailsPage() {
       background: 'linear-gradient(135deg, #09203F 0%, #537895 100%)',
       fontFamily: 'Calibri, sans-serif'
     }}>
-      <div className="mb-4">
-        <h2 className="text-2xl font-bold">{studentSRN}</h2>
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-bold mb-4">Welcome to your profile dashboard</h1>
+        <h2 className="text-2xl font-semibold bg-opacity-20 bg-white inline-block py-2 px-4 rounded">{studentSRN}</h2>
       </div>
 
-      <div className="p-4 rounded mb-4 border-2 border-white bg-opacity-10 bg-white">
-        <h3 className="mb-3 text-xl font-semibold">Change Email</h3>
+      <div className="p-6 rounded-lg mb-6" style={{ backgroundColor: '#1D2023' }}>
+        <h3 className="mb-4 text-xl font-semibold">Change Email</h3>
         <form onSubmit={handleEmailChange}>
-          <div className="mb-3">
+          <div className="mb-4">
             <input
               type="email"
-              className="w-full p-2 bg-gray-800 text-white rounded"
+              className="w-full p-3 bg-gray-800 text-white rounded"
               placeholder="Current email"
               value={currentEmail}
               onChange={(e) => setCurrentEmail(e.target.value)}
               required
             />
           </div>
-          <div className="mb-3">
+          <div className="mb-4">
             <input
               type="email"
-              className="w-full p-2 bg-gray-800 text-white rounded"
+              className="w-full p-3 bg-gray-800 text-white rounded"
               placeholder="New email"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
               required
             />
           </div>
-          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          <button type="submit" className="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">
             Update Email
           </button>
         </form>
       </div>
 
-      <div className="p-4 rounded border-2 border-white bg-opacity-10 bg-white">
-        <h3 className="mb-3 text-xl font-semibold">Change Password</h3>
+      <div className="p-6 rounded-lg" style={{ backgroundColor: '#1D2023' }}>
+        <h3 className="mb-4 text-xl font-semibold">Change Password</h3>
         <form onSubmit={handlePasswordChange}>
-          <div className="mb-3">
+          <div className="mb-4">
             <input
               type="password"
-              className="w-full p-2 bg-gray-800 text-white rounded"
+              className="w-full p-3 bg-gray-800 text-white rounded"
               placeholder="Current password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               required
             />
           </div>
-          <div className="mb-3">
+          <div className="mb-4">
             <input
               type="password"
-              className="w-full p-2 bg-gray-800 text-white rounded"
+              className="w-full p-3 bg-gray-800 text-white rounded"
               placeholder="New password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
             />
           </div>
-          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          <button type="submit" className="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">
             Update Password
           </button>
         </form>
