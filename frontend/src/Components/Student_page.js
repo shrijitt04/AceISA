@@ -207,11 +207,12 @@ export default function Component() {
         }
 
         .exam-card {
-          background-color: #1D2023;  // 1D2023
-          border-radius: 10px;
+          background-color: #1D2023;
+          border-radius: 15px;  /* Updated: Increased border-radius for more rounded edges */
           padding: 20px;
           color: white;
           transition: transform 0.3s ease, box-shadow 0.3s ease;
+          overflow: hidden;  /* Added: Ensures content doesn't overflow rounded corners */
         }
 
         .exam-card:hover {
@@ -239,6 +240,9 @@ export default function Component() {
           background-color: #007bff;
           border: none;
           transition: background-color 0.3s ease;
+          border-radius: 10px;  /* Added: Rounded corners for the button */
+          padding: 10px;  /* Added: More padding for better appearance */
+          margin-top: 10px;  /* Added: Space above the button */
         }
 
         .btn-primary:hover {
