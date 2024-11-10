@@ -384,13 +384,10 @@ app.post('/forgot-password', (req, res) => {
   );
 });
 
-// server.js
-
 app.get('/leaderboard', (req, res) => {
-  const { examCode } = req.query;  // Access examCode from req.query
+  const { examCode } = req.query;  
   console.log("Received examCode:", examCode);
 
-  // Assuming examCode contains the `subjId`
   const subjId = examCode;
   const query = `
     SELECT SRN, marks, 

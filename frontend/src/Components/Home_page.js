@@ -41,11 +41,6 @@ function Home() {
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
-                  Leaderboard
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
                   About Us
                 </a>
               </li>

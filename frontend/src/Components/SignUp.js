@@ -1,92 +1,162 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios'
+import React, { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import axios from "axios"
+import logo from './logo.png';
 
-function Signup() {
-  // State to track if the checkbox is checked
-  const [isChecked, setIsChecked] = useState(false);
-
-  // Function to toggle the checkbox state
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-  };
-
+export default function Component() {
+  const [isChecked, setIsChecked] = useState(false)
   const [values, setValues] = useState({
-    name:'',
-    srn:'',
-    email:'',
+    name: '',
+    srn: '',
+    email: '',
     number: '',
-    password:'',
+    password: '',
   })
+  const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
-  const handleInput = (event) => {
-    setValues(prev=>({...prev, [event.target.name]: event.target.value}))
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked)
   }
 
-  const navigate = useNavigate();
+  const handleInput = (event) => {
+    const { name, value } = event.target
+    setValues(prev => ({ ...prev, [name]: value.trim() }))
+  }
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
+    setIsLoading(true)
     try {
-      await axios.post('http://localhost:8081/signup', values);
-      alert("Signed up successfully!!");
-      navigate('/login');
+      await axios.post('http://localhost:8081/signup', values)
+      alert("Signed up successfully!!")
+      navigate('/login')
     } catch (err) {
-      console.log(err);
+      console.log(err)
+      alert("An error occurred. Please try again.")
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
-    <div className="signup template d-flex justify-content-center align-items-center vh-100 bg-primary" style={{
-        height: "100vh", // Ensure the height is set for the gradient to be visible
-        background:
-          "linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%)",
-      }}> 
-      <div className="form_container p-5 rounded bg-white">
-        <form onSubmit={handleSubmit}>
-          <h3 className="text-center"> Sign Up </h3>
-          <div className="mb-2">
-            <label htmlFor="name">Full Name</label>
-            <input type="text" className="form-control" name="name" onChange={handleInput} required/>
+    <div className="min-h-screen d-flex justify-content-center align-items-center" 
+      style={{
+        background: "linear-gradient(135deg, #09203F 0%, #537895 100%)",
+        minHeight: "100vh",
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
+      <div className="card shadow-lg border-0 position-relative" style={{ maxWidth: '800px', width: '90%', margin: 'auto', backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+        <div className="card-body p-0">
+          <div className="row g-0">
+            <div className="col-12 col-md-5 text-center p-5 d-flex flex-column justify-content-center align-items-center">
+              <img
+                src={logo}
+                alt="Education"
+                className="img-fluid mb-4"
+                style={{ maxWidth: '200px' }}
+              />
+              <div className="small text-muted">
+                Join AceISA today!
+              </div>
+            </div>
+            <div className="col-12 col-md-7 p-5">
+              <h4 className="text-center mb-4">Sign Up</h4>
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    className="form-control form-control-lg bg-light"
+                    name="name"
+                    placeholder="Full Name"
+                    onChange={handleInput}
+                    required
+                    style={{ borderRadius: '25px' }}
+                  />
+                </div>
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    className="form-control form-control-lg bg-light"
+                    name="srn"
+                    placeholder="SRN/SID"
+                    onChange={handleInput}
+                    required
+                    style={{ borderRadius: '25px' }}
+                  />
+                </div>
+                <div className="mb-3">
+                  <input
+                    type="email"
+                    className="form-control form-control-lg bg-light"
+                    name="email"
+                    placeholder="Email"
+                    onChange={handleInput}
+                    required
+                    style={{ borderRadius: '25px' }}
+                  />
+                </div>
+                <div className="mb-3">
+                  <input
+                    type="tel"
+                    className="form-control form-control-lg bg-light"
+                    name="number"
+                    placeholder="Phone Number"
+                    onChange={handleInput}
+                    required
+                    style={{ borderRadius: '25px' }}
+                  />
+                </div>
+                <div className="mb-3">
+                  <input
+                    type="password"
+                    className="form-control form-control-lg bg-light"
+                    name="password"
+                    placeholder="Password"
+                    onChange={handleInput}
+                    required
+                    style={{ borderRadius: '25px' }}
+                  />
+                </div>
+                <div className="mb-4">
+                  <div className="form-check">
+                    <input 
+                      type="checkbox" 
+                      className="form-check-input" 
+                      id="check" 
+                      onChange={handleCheckboxChange}
+                    />
+                    <label className="form-check-label" htmlFor="check">
+                      I agree to all the terms and conditions
+                    </label>
+                  </div>
+                </div>
+                <div className="d-grid gap-2">
+                  <button 
+                    className="btn btn-success btn-lg"
+                    type="submit" 
+                    disabled={!isChecked || isLoading}
+                    style={{ borderRadius: '25px' }}
+                  >
+                    {isLoading ? (
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    ) : null}
+                    Sign Up
+                  </button>
+                </div>
+                <div className="text-center mt-3">
+                  <Link to="/login" className="text-muted text-decoration-none">
+                    Already registered? Login Now!
+                  </Link>
+                </div>
+              </form>
+            </div>
           </div>
-          <div className="mb-2">
-            <label htmlFor="srn">SRN/SID</label>
-            <input type="text" name="srn" placeholder="PES2XXXXXXXXX" required className="form-control" onChange={handleInput} />
-          </div>
-          <div className="mb-2">
-            <label htmlFor="email">Email</label>
-            <input type="email" name="email" placeholder="example@gmail.com" required className="form-control" onChange={handleInput}/>
-          </div>
-          <div className="mb-2">
-            <label htmlFor="number">Phone Number</label>
-            <input type="tel" name="number" required className="form-control" onChange={handleInput}/>
-          </div>
-          <div className="mb-2">
-            <label htmlFor="password">Password</label>
-            <input type="password" name="password" placeholder="Enter Password" required className="form-control" onChange={handleInput}/>
-          </div>
-          <div className="mb-2">
-            <input 
-              type="checkbox" 
-              className="custom-control custom-checkbox" 
-              id="check" 
-              onChange={handleCheckboxChange}
-            />
-            <label htmlFor="check" className="custom-input-label ms-2">
-              I agree to all the terms and conditions
-            </label>
-          </div>
-          <div className="d-grid">
-            {/* The button is disabled unless the checkbox is checked */}
-            <button className="btn btn-primary" disabled={!isChecked}>Sign Up</button>
-          </div>
-          <p className="text-end mt-2">
-            Already registered? <Link to="/login" className="ms-2">Login Now!</Link>
-          </p>
-        </form>
+        </div>
       </div>
     </div>
-  );
+  )
 }
-
-export default Signup;
