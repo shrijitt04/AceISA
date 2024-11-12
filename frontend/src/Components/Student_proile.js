@@ -68,7 +68,7 @@ const StudentDetailsPage = () => {
               value={currentEmail}
               onChange={(e) => setCurrentEmail(e.target.value)}
               required
-              style={{ color: 'white', backgroundColor: 'white', borderColor: '#495057' }}
+              style={{ color: 'white', backgroundColor: '#343a40', borderColor: '#495057' }}
             />
           </div>
           <div className="mb-3">

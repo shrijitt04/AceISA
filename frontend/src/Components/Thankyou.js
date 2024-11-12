@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
-const ThankYouPage = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const score = location.state.correct_answers;
-  const totalQuestions = location.state.totalQuestions;
-  const srn = location.state.srn;
-  const examCode = location.state.examCode;
-  const [typedText, setTypedText] = useState('');
-  const [showMessage, setShowMessage] = useState(false);
+export default function ThankYouPage() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const score = location.state.correct_answers
+  const totalQuestions = location.state.totalQuestions
+  const srn = location.state.srn
+  const examCode = location.state.examCode
+  const [typedText, setTypedText] = useState('')
+  const [showMessage, setShowMessage] = useState(false)
+  const [showButton, setShowButton] = useState(false)
 
   const onGoBack = async () => {
     const values = {
@@ -19,43 +19,44 @@ const ThankYouPage = () => {
       score: score,
       totalQuestions: totalQuestions,
       examCode: examCode,
-    };
+    }
 
     try {
-      await axios.post('http://localhost:8081/email', values);
-      alert("You are returning to home page");
-      navigate('/student', { state: { srn: srn } });
+      await axios.post('http://localhost:8081/email', values)
+      alert("You are returning to home page")
+      navigate('/student', { state: { srn: srn } })
     } catch (err) {
-      console.error("Failed to send email:", err.response ? err.response.data : err.message);
-      alert("Failed to send email. Please try again later.");
+      console.error("Failed to send email:", err.response ? err.response.data : err.message)
+      alert("Failed to send email. Please try again later.")
     }
-  };
+  }
 
   useEffect(() => {
-    const text = 'Thank you for your participation';
-    let index = 0;
+    const text = 'Thank you for your participation'
+    let index = 0
 
     const typingInterval = setInterval(() => {
       if (index <= text.length) {
-        setTypedText(text.slice(0, index));
-        index++;
+        setTypedText(text.slice(0, index))
+        index++
       } else {
-        clearInterval(typingInterval);
-        setTimeout(() => setShowMessage(true), 500);
+        clearInterval(typingInterval)
+        setTimeout(() => setShowMessage(true), 500)
+        setTimeout(() => setShowButton(true), 1000)
       }
-    }, 50);
+    }, 50)
 
     return () => {
-      clearInterval(typingInterval);
-    };
-  }, []);
+      clearInterval(typingInterval)
+    }
+  }, [])
 
   return (
     <div
       style={{
-        background: 'linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%)',
+        background: 'linear-gradient(135deg, #09203F 0%, #537895 100%)',
         minHeight: '100vh',
-        fontFamily: 'Arial, sans-serif',
+        fontFamily: 'Calibri, sans-serif',
         color: '#ffffff',
         display: 'flex',
         flexDirection: 'column',
@@ -92,10 +93,11 @@ const ThankYouPage = () => {
       </h2>
 
       <div
-        className={`bottom-content ${showMessage ? 'fade-in' : ''}`}
+        className={`bottom-content ${showButton ? 'slide-up' : ''}`}
         style={{
           opacity: 0,
-          transition: 'opacity 1s ease-in',
+          transform: 'translateY(20px)',
+          transition: 'opacity 1s ease-in, transform 1s ease-out',
         }}
       >
         <button onClick={onGoBack} className="btn btn-primary btn-lg mt-4">
@@ -103,31 +105,42 @@ const ThankYouPage = () => {
         </button>
       </div>
 
-      <style>
-        {`
-          @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-          }
-          @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: orange; }
-          }
-          .fade-in {
-            opacity: 1 !important;
-          }
-          .btn-primary {
-            background-color: #4a90e2;
-            border-color: #4a90e2;
-          }
-          .btn-primary:hover {
-            background-color: #3a7bc8;
-            border-color: #3a7bc8;
-          }
-        `}
-      </style>
+      <style jsx>{`
+        @keyframes typing {
+          from { width: 0 }
+          to { width: 100% }
+        }
+        @keyframes blink-caret {
+          from, to { border-color: transparent }
+          50% { border-color: orange; }
+        }
+        .fade-in {
+          opacity: 1 !important;
+        }
+        .slide-up {
+          opacity: 1 !important;
+          transform: translateY(0) !important;
+        }
+        .btn-primary {
+          background-color: #4a90e2;
+          border-color: #4a90e2;
+          transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+          background-color: #3a7bc8;
+          border-color: #3a7bc8;
+          transform: translateY(-3px);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+          100% { transform: scale(1); }
+        }
+        .btn-primary:focus {
+          animation: pulse 1s infinite;
+        }
+      `}</style>
     </div>
-  );
-};
-
-export default ThankYouPage;
+  )
+}

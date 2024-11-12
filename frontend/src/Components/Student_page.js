@@ -84,6 +84,7 @@ export default function Component() {
   }
 
   const handleLogout = () => {
+    alert("You are now logging out.")
     navigate('/login')
   }
 
