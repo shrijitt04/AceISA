@@ -17,6 +17,7 @@ import LeaderboardPage from './Components/Leaderboard';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 
+
 function App() {
   return (
     <BrowserRouter>
