@@ -24,27 +24,66 @@ db.connect((err) => {
 });
 
 
-app.post('/signup',(req,res)=>{
+app.post('/signup', (req, res) => {
+  console.log(req.body);
 
-        console.log(req);
-        const sql = "Insert into students (`srn`,`name`,`email`,`Phone_num`,`password`) VALUES (?)";
-        const values = [
-            req.body.srn,
-            req.body.name,
-            req.body.email,
-            req.body.number,
-            req.body.password,
-            // req.body.userType
-        ]
-        db.query(sql,[values],(err,result)=>{
-            if(err)
-                console.error(err)
-                return res.json({Message: "Error "});
-            return res.json(result);
-        })
-        console.log("After values")
-    
-})
+  const sql = "INSERT INTO students (`srn`, `name`, `email`, `Phone_num`, `password`) VALUES (?)";
+  const values = [
+      req.body.srn,
+      req.body.name,
+      req.body.email,
+      req.body.number,
+      req.body.password,
+  ];
+
+  // Insert the student into the database
+  db.query(sql, [values], (err, result) => {
+      if (err) {
+          console.error(err);
+          return res.json({ Message: "Error occurred while inserting student" });
+      }
+
+      // If student insert is successful, create a MySQL user and grant privileges
+      const srn = req.body.srn;
+      const password = req.body.password;
+
+      // Create user query
+      const createUserQuery = `CREATE USER '${srn}'@'localhost' IDENTIFIED BY '${password}'`;
+
+      // Run the create user query
+      db.query(createUserQuery, (err, result) => {
+          if (err) {
+              console.error('Error creating user:', err);
+              return res.json({ Message: 'Error occurred while creating user' });
+          }
+
+          // Grant privileges for mcqs table
+          const grantMcqsQuery = `GRANT SELECT ON aceisa.mcqs TO '${srn}'@'localhost'`;
+          db.query(grantMcqsQuery, (err, result) => {
+              if (err) {
+                  console.error('Error granting privileges for mcqs:', err);
+                  return res.json({ Message: 'Error occurred while granting mcqs privileges' });
+              }
+
+              // Grant privileges for courses table
+              const grantCoursesQuery = `GRANT SELECT ON aceisa.courses TO '${srn}'@'localhost'`;
+              db.query(grantCoursesQuery, (err, result) => {
+                  if (err) {
+                      console.error('Error granting privileges for courses:', err);
+                      return res.json({ Message: 'Error occurred while granting courses privileges' });
+                  }
+
+                  // Return success response after user creation and privileges granted
+                  console.log('User created and privileges granted successfully');
+                  return res.json({ Message: 'Student signed up successfully, user created, and privileges granted' });
+              });
+          });
+      });
+  });
+
+  console.log("After values");
+});
+
 
 app.post('/login', (req, res) => {
     console.log(req.body);

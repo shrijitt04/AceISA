@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const ExamCreationPage = () => {
@@ -24,12 +23,9 @@ const ExamCreationPage = () => {
   const [isTestCreated, setIsTestCreated] = useState(false);
 
   useEffect(() => {
-    // Show the title after a short delay
     setTimeout(() => setShowTitle(true), 500);
-
-    // Set the createdBy to the srn and createdOn to the current date
     setCreatedBy(srn);
-    const currentDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    const currentDate = new Date().toISOString().split('T')[0];
     setCreatedOn(currentDate);
   }, [srn]);
 
@@ -114,7 +110,8 @@ const ExamCreationPage = () => {
 
   return (
     <div className="container-fluid min-vh-100 py-5" style={{
-      background: 'linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%)',
+      background: 'linear-gradient(135deg, #09203F 0%, #537895 100%)',
+      fontFamily: 'Calibri, sans-serif',
     }}>
       <h1 className={`text-center mb-5 text-white ${showTitle ? 'fade-in' : ''}`} style={{ fontSize: '3.5rem' }}>Exam Creation</h1>
 
@@ -191,13 +188,13 @@ const ExamCreationPage = () => {
           <h3 className="mb-3 text-white">Question {currentQuestion}</h3>
           <input
             type="text"
-            className="form-control mb-3 bg-light" // Changed bg-white to bg-light
+            className="form-control mb-3 bg-light"
             placeholder="Enter Question ID"
             value={questionID}
             onChange={(e) => setQuestionID(e.target.value)}
           />
           <textarea
-            className="form-control mb-3 bg-light" // Changed bg-white to bg-light
+            className="form-control mb-3 bg-light"
             placeholder="Enter your question here"
             value={questionText}
             onChange={(e) => setQuestionText(e.target.value)}
@@ -207,7 +204,7 @@ const ExamCreationPage = () => {
               <div key={index} className="col-md-6 mb-2">
                 <input
                   type="text"
-                  className="form-control bg-light" // Changed bg-white to bg-light
+                  className="form-control bg-light"
                   placeholder={`Option ${index + 1}`}
                   value={option}
                   onChange={(e) => handleOptionChange(index, e.target.value)}
@@ -218,14 +215,14 @@ const ExamCreationPage = () => {
           <h5 className="text-white mt-4">Correct Answer (A, B, C, or D)</h5>
           <input
             type="text"
-            className="form-control mb-3 bg-light" // Changed bg-white to bg-light
+            className="form-control mb-3 bg-light"
             placeholder="Enter correct answer (A, B, C, or D)"
             value={correctAnswer}
             onChange={(e) => setCorrectAnswer(e.target.value.toUpperCase())}
           />
           <h5 className="text-white mt-4">Enter Detailed Answer</h5>
           <textarea
-            className="form-control mb-3 bg-light" // Changed bg-white to bg-light
+            className="form-control mb-3 bg-light"
             placeholder="Enter detailed answer"
             value={detailedAnswer}
             onChange={(e) => setDetailedAnswer(e.target.value)}
@@ -241,4 +238,4 @@ const ExamCreationPage = () => {
   );
 };
 
-export default ExamCreationPage
+export default ExamCreationPage;

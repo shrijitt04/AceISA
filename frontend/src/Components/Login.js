@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
-import logo from './logo.png'; // Make sure the image path is correct
+import logo2 from './logo2.jpg'; // Make sure the image path is correct
 
 export default function Component() {
   const [values, setValues] = useState({
@@ -76,7 +76,7 @@ export default function Component() {
           <div className="row g-0">
             <div className="col-12 col-md-5 text-center p-5 d-flex flex-column justify-content-center align-items-center">
               <img
-                src={logo} 
+                src={logo2} 
                 alt="Education"
                 className="img-fluid mb-4"
                 style={{ maxWidth: '200px' }}
