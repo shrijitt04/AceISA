@@ -9,7 +9,7 @@ export default function Component() {
   const [typedSRN, setTypedSRN] = useState('')
   const [showExams, setShowExams] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const welcomeText = 'Welcome to ACE ISA'
+  const welcomeText = 'Welcome to AceISA'
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -88,6 +88,10 @@ export default function Component() {
     navigate('/login')
   }
 
+  const handleaboutus = () => {
+    navigate('/aboutus')
+  }
+
   return (
     <div className="exam-page">
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
@@ -97,8 +101,8 @@ export default function Component() {
         {isSidebarOpen && (
           <div className="sidebar-content">
             <button onClick={goToProfile}>Profile</button>
-            <button>Subjects</button>
-            <button>About Us</button>
+            {/* <button>Subjects</button> */}
+            <button onClick={handleaboutus}>About Us</button>
             <button onClick={handleLogout}>Log out</button>
           </div>
         )}

@@ -458,6 +458,26 @@ app.post('/name',(req,res)=>{
   })
 })
 
+// app.post('/subjects', (req, res) => {
+//   let sql = 'SELECT SubjID FROM COURSES';
+
+//   db.query(sql, (err, result) => {
+//     if (err) {
+//       console.error("Error executing query:", err);  // Logs the error
+//       return res.status(500).json({ message: 'Internal Server Error', error: err });
+//     }
+
+//     // Map the result to extract only SubjID
+//     const subjectIDs = result.map(course => course.SubjID);
+//     console.log(subjectIDs);  // This will log an array of SubjID values
+
+//     // Send back only the list of SubjID
+//     res.status(200).json({ subjectIDs });
+//   });
+// });
+
+
+
 app.listen(8081, () => {
   console.log("Server is running on port 8081");
 });

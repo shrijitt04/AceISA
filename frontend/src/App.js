@@ -14,6 +14,7 @@ import TeacherExamPage from './Components/TeacherExamPage';
 import StudentDetailsPage from './Components/Student_proile';
 import ExamCreationPage from './Components/Teacherexamcreation';
 import LeaderboardPage from './Components/Leaderboard';
+import AboutUs from './Components/About_Us';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 
@@ -35,6 +36,7 @@ function App() {
         <Route path='/createnewexam' element={<ExamCreationPage />} />
         <Route path='/studentprofile' element={<StudentDetailsPage />}/>
         <Route path='/leaderboard' element={<LeaderboardPage />} />
+        <Route path='/aboutus' element={<AboutUs />} />
 
       </Routes>
      

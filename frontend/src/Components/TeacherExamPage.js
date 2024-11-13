@@ -2,12 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
-
 const fetchQuestions = async (subjectcode) => {
-
   try {
-    
     const response = await fetch(`http://localhost:8081/questions?subjID=${subjectcode}`, {
       method: 'GET',
       headers: {
@@ -27,7 +23,6 @@ const fetchQuestions = async (subjectcode) => {
   }
 };
 
-
 const Exam = () => {
   const location = useLocation()
   const navigate = useNavigate()
@@ -36,44 +31,42 @@ const Exam = () => {
 
   console.log(srn)
   console.log(examCode)
-  const { subjectcode } = useParams();  // Extract the subjectcode from the route parameters
+  const { subjectcode } = useParams();
   const [testData, setTestData] = useState(null);
   const [answers, setAnswers] = useState({});
 
   useEffect(() => {
     const loadData = async () => {
-      const data = await fetchQuestions(subjectcode);  // Pass the subjectcode to fetchQuestions
-      console.log('Fetched questions:', data); // Log the fetched questions structure
+      const data = await fetchQuestions(subjectcode);
+      console.log('Fetched questions:', data);
       setTestData(data);
     };
 
     loadData();
   }, [subjectcode]);
 
-  // Mapping option index to answer letters A, B, C, D
   const optionLetterMap = ['A', 'B', 'C', 'D'];
 
   const handleOptionSelect = (questionId, optionIndex) => {
-    const selectedOption = optionLetterMap[optionIndex];  // Map the selected option to the corresponding letter
-    console.log(`Selected option for question ${questionId}:`, selectedOption);  // Debug log to check selected option
+    const selectedOption = optionLetterMap[optionIndex];
+    console.log(`Selected option for question ${questionId}:`, selectedOption);
     setAnswers(prev => ({
       ...prev,
       [questionId]: selectedOption
     }));
   };
 
-    const handleSubmit = () => {
-        navigate('/teacherhome',{state: {srn : srn}})
-    }
-
+  const handleSubmit = () => {
+    navigate('/teacherhome', { state: { srn: srn } })
+  }
 
   if (!testData) return <div>Loading...</div>;
 
   return (
     <div style={{
-      background: 'linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%)',
+      background: 'linear-gradient(135deg, #09203F 0%, #537895 100%)',
       minHeight: '100vh',
-      fontFamily: 'Arial, sans-serif',
+      fontFamily: 'Calibri, sans-serif',
       color: '#ffffff',
       padding: '2rem 0'
     }}>
@@ -94,8 +87,8 @@ const Exam = () => {
                       id={`q${question.QuestionID}o${optionIndex}`}
                       name={`question${question.QuestionID}`}
                       value={option}
-                      checked={answers[question.QuestionID] === optionLetterMap[optionIndex]}  // Check if the selected answer matches the letter
-                      onChange={() => handleOptionSelect(question.QuestionID, optionIndex)}  // Use the index to get the letter
+                      checked={answers[question.QuestionID] === optionLetterMap[optionIndex]}
+                      onChange={() => handleOptionSelect(question.QuestionID, optionIndex)}
                       className="me-2"
                     />
                     <label htmlFor={`q${question.QuestionID}o${optionIndex}`}>
@@ -118,17 +111,18 @@ const Exam = () => {
       <style>
         {`
           .option-box {
-            background-color: rgba(30, 30, 30, 0.7);
+            background-color: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
           }
           .option-box:hover {
-            background-color: rgba(50, 50, 50, 0.7);
+            background-color: rgba(255, 255, 255, 0.2);
           }
           .option-box.selected {
-            outline: 2px solid lightblue;
+            background-color: rgba(74, 144, 226, 0.6);
+            outline: 2px solid #4a90e2;
           }
           .btn-primary {
             background-color: #4a90e2;

@@ -7,7 +7,7 @@ export default function TeacherHomePage() {
   const [typedText, setTypedText] = useState('')
   const [showExams, setShowExams] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const welcomeText = 'Welcome to ACE ISA'
+  const welcomeText = 'Welcome to AceISA'
 
   const navigate = useNavigate()
   const location = useLocation()
