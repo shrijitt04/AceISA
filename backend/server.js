@@ -42,22 +42,17 @@ app.post('/signup', (req, res) => {
           console.error(err);
           return res.json({ Message: "Error occurred while inserting student" });
       }
-
-      // If student insert is successful, create a MySQL user and grant privileges
       const srn = req.body.srn;
       const password = req.body.password;
 
-      // Create user query
       const createUserQuery = `CREATE USER '${srn}'@'localhost' IDENTIFIED BY '${password}'`;
 
-      // Run the create user query
       db.query(createUserQuery, (err, result) => {
           if (err) {
               console.error('Error creating user:', err);
               return res.json({ Message: 'Error occurred while creating user' });
           }
 
-          // Grant privileges for mcqs table
           const grantMcqsQuery = `GRANT SELECT ON aceisa.mcqs TO '${srn}'@'localhost'`;
           db.query(grantMcqsQuery, (err, result) => {
               if (err) {
@@ -73,7 +68,6 @@ app.post('/signup', (req, res) => {
                       return res.json({ Message: 'Error occurred while granting courses privileges' });
                   }
 
-                  // Return success response after user creation and privileges granted
                   console.log('User created and privileges granted successfully');
                   return res.json({ Message: 'Student signed up successfully, user created, and privileges granted' });
               });
@@ -121,7 +115,7 @@ app.get('/exams', (req, res) => {
   
 app.get('/questions', (req, res) => {
     const subjectcode = req.query.subjID; // Match the query parameter name
-    const sql = "SELECT QuestionID, Question, Option1, Option2, Option3, Option4, Answer FROM mcqs WHERE SubjID = ?"; // Adjust your column names as needed
+    const sql = "SELECT QuestionID, Question, Option1, Option2, Option3, Option4, Answer FROM mcqs WHERE SubjID = ?"; 
     db.query(sql, [subjectcode], (err, result) => {
         if (err) {
             console.error("Internal Server Error:", err);
@@ -329,7 +323,7 @@ app.delete('/delete/:examCode', (req, res) => {
 });
 
 app.post('/change_email',(req,res)=>{
-  console.log("Inside API ")
+  // console.log("Inside API ")
   const {srn, currentEmail , newEmail} = req.body
   let sql = `UPDATE students SET Email = (?) where SRN=(?)`
 
@@ -344,7 +338,7 @@ app.post('/change_email',(req,res)=>{
 })
 
 app.post('/change_password',(req,res)=>{
-  console.log("Inside API ")
+  // console.log("Inside API ")
   const {srn, currentPassword , newPassword} = req.body
   let sql = `UPDATE students SET Password = (?) where SRN=(?)`
 
@@ -458,23 +452,6 @@ app.post('/name',(req,res)=>{
   })
 })
 
-// app.post('/subjects', (req, res) => {
-//   let sql = 'SELECT SubjID FROM COURSES';
-
-//   db.query(sql, (err, result) => {
-//     if (err) {
-//       console.error("Error executing query:", err);  // Logs the error
-//       return res.status(500).json({ message: 'Internal Server Error', error: err });
-//     }
-
-//     // Map the result to extract only SubjID
-//     const subjectIDs = result.map(course => course.SubjID);
-//     console.log(subjectIDs);  // This will log an array of SubjID values
-
-//     // Send back only the list of SubjID
-//     res.status(200).json({ subjectIDs });
-//   });
-// });
 
 
 
