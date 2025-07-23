@@ -114,7 +114,7 @@ app.get('/exams', (req, res) => {
   });
   
 app.get('/questions', (req, res) => {
-    const subjectcode = req.query.subjID; // Match the query parameter name
+    const subjectcode = req.query.subjID; 
     const sql = "SELECT QuestionID, Question, Option1, Option2, Option3, Option4, Answer FROM mcqs WHERE SubjID = ?"; 
     db.query(sql, [subjectcode], (err, result) => {
         if (err) {
